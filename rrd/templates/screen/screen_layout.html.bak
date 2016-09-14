@@ -1,0 +1,350 @@
+{% macro layout_block(layout, graphs) -%}
+<script>
+function fn_toogle_legend_flot(a, i) {
+    var $container = $('.chart-' + i).parent();
+    var $l = $container.find('.legend');
+    console.log($container.html());
+    if ($l.is(':hidden')) {
+        $l.show();
+    } else {
+        $l.hide();
+    }
+    $(a).text('切换legend');
+    return false;
+}
+
+function fn_toogle_sum_flot(a, i) {
+    var $container = $('.chart-' + i).parent();
+    var url = $container.data('u');
+    var u = $.query.load(url);
+    var s = u.get('sum');
+    if (s && s === 'on') {
+        s = 'off';
+    } else {
+        s = 'on';
+    }
+    $(a).text('切换求和');
+    u = u.set('sum', s);
+    var dataU = url.split('?')[0] + u.toString();
+    $container.data('u', dataU);
+
+    // 重新请求这个url
+    if (window.getData) {
+        window.getData($container, dataU);
+    }
+    return false;
+}
+
+$(function(){
+    //setInterval(function() {
+    //    if (window.active) {
+    //        active();
+    //    }
+    //}, 60000);
+});
+
+
+</script>
+
+
+        {%set i=0%}
+        <div class="row">
+        {%for graph in graphs%}
+           {% if (i % layout == 0) %}
+             <div style="clear: both;">
+           {% endif %}
+                {% set col = (12/layout)|int %}
+                <div class="col-md-{{col}}" id="graph-{{i}}" style="padding:3px;">
+                        <div class="panel panel-default chart-container" data-u="{{graph.src}}">
+                                <div class="panel-heading" style="padding: 10px 5px;">
+                                    <a class="btn btn-default btn-xs reset-zoom pull-right" style="margin-left:5px;" data-index="{{i}}">
+                                        <span class="glyphicon glyphicon-zoom-out" aria-hidden="true" data-index="{{i}}"></span>
+                                    </a>
+                                    <div class="btn-group pull-right">
+                                        <a class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" href="#">
+                                            <span class="caret"></span>
+                                        </a>
+                                        <ul class="dropdown-menu">
+                                            <li>
+                                                <a href="javascript:void(0);" class="btn btn-link btn-xs" onclick="return fn_toogle_legend_flot(this, '{{i}}');">切换legend</a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:void(0);" class="btn btn-link btn-xs" onclick="return fn_toogle_sum_flot(this, '{{i}}');">切换求和</a>
+                                            </li>
+
+                                            <li>
+                                            {%set big_graph = graph.src.replace("graph_type=h", "").replace("graph_type=k", "").replace("graph_type=a", "")%}
+                                            {%if graph.src.find("/chart/h") >=0 %}
+                                                {%set big_graph = graph.src.replace("/chart/h", "/chart/big")%}
+                                                <a href="{{big_graph|safe}}&start=-86400&graph_type=h" target="__blank" class="btn btn-link btn-xs">查看大图</a>
+                                            {%elif graph.src.find("/chart/k") >=0%}
+                                                {%set big_graph = graph.src.replace("/chart/k", "/chart/big")%}
+                                                <a href="{{big_graph|safe}}&start=-86400&graph_type=k" target="__blank" class="btn btn-link btn-xs">查看大图</a>
+                                            {%else%}
+                                                {%set big_graph = graph.src.replace("/chart/a", "/chart/big")%}
+                                                <a href="{{big_graph|safe}}&start=-86400&graph_type=a" target="__blank" class="btn btn-link btn-xs">查看大图</a>
+                                            {%endif%}
+                                            </li>
+
+                                            <li>
+                                                <a href="/graph/{{graph.id}}/edit" target="__blank" class="btn btn-link btn-xs">编辑</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <span class="panel-title graph-title">{{graph.title}}</span>
+                                </div>
+
+                                <div class="panel-body text-center" style="margin:5px;padding:0px;">
+                                    <span class="chart-title"></span>
+                                </div>
+
+                                <div class="chart-{{i}} chart-area panel-body" style="margin:10px;padding:10px;"></div>
+                                <div class="legend panel-body graph-legend"></div>
+                        </div>
+                    {%set i=i+1%}
+                </div>
+           {% if (i % layout == 0 or loop.last) %}
+             </div>
+           {% endif %}
+        {%endfor%}
+    </div>
+
+{%- endmacro %}
+
+
+{% macro screen_main_menu(current_top_screen, top_screens) -%}
+    <div class="btn-group">
+
+      <button class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+        {%if current_top_screen%}
+            {{current_top_screen.name}}
+        {%else%}
+            screen首页
+        {%endif%}
+        <span class="caret"></span>
+      </button>
+
+      <ul class="dropdown-menu" role="menu">
+        <li><a href="/screen/add"> <small>+ 导航</small></a></li>
+        <li>
+            <div class="form-group search-area">
+                <input class="form-control" id="searchinput" type="search" placeholder="搜索..">
+            </div>
+        </li>
+        {%for c in top_screens%}
+
+        <li class="screen" role="presentation">
+            <a  role="menuitem" href="/screen/{{c.id}}"><small>{{c.name}}</small></a>
+        </li>
+
+        {%endfor%}
+      </ul>
+
+    </div>
+{%- endmacro %}
+
+{% macro screen_sub_menu(current_top_screen, current_sub_screen, sub_screens) -%}
+    <div class="btn-group">
+      <button class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+        {%if current_sub_screen %}
+            {{current_sub_screen.name}}
+        {%else%}
+            选择
+        {%endif%}
+        <span class="caret"></span>
+      </button>
+
+        <ul class="dropdown-menu">
+
+        {%if current_top_screen %}
+        <li><a href="/screen/add?pid={{current_top_screen.id}}"> + screen</a></li>
+        {%endif%}
+         <li>
+            <div class="form-group search-area">
+                <input class="form-control" id="searchinput2" type="search" placeholder="搜索..">
+            </div>
+
+            </li>
+        {%for c in sub_screens%}
+            <li class="dropdown-submenu">
+            <a  href="/screen/{{c.id}}"><small>{{c.name}}</small></a>
+
+            </li>
+        {%endfor%}
+      </ul>
+
+    </div>
+{%- endmacro %}
+
+{% macro screen_usual(usual_list, all_list,show) -%}
+
+<script type="text/javascript" src="{{url_for('static',filename='js/jquery.ui.position.min.js')}}"></script>
+<script type="text/javascript" src="{{url_for('static',filename='js/jquery.contextMenu.min.js')}}"></script>
+
+<script>
+$(document).ready(function(){
+    var show = '{{show | safe}}';
+
+    if(show == 'all'){
+        $("#pathtab a:last").tab('show');
+    }
+
+    $('#tab1').contextMenu({
+        selector:'a',
+        trigger: 'right',
+        delay:800,
+        autoHide:true,
+        items: {
+            "name": {
+                name: "新的名字",
+                type: 'text',
+                value: "输入别名"
+            },
+            "sep1": "---------",
+            "alter":{
+                name: "修改别名",
+                icon: "paste",
+                callback: function(key, opt) {
+                    var $this = this;
+                    var href = $(this).attr("href");
+                    var end = href.length;
+                    var start = href.lastIndexOf('/');
+                    var href_id = href.substring(start+1,end);
+
+                    var oldname = $(this).text().trim();
+                    $.contextMenu.getInputValues(opt, $this.data());
+                    var newname = $this.data().name;
+                    newname = newname.replace(/&/g," ");
+                    window.location.href="/screen/updatescreen?oldname="+oldname+"&newname="+newname+"&screen_id="+href_id;
+                }
+            },
+            "sep2": "---------",
+            "delete":{
+                name: "移出常用",
+                icon: "delete",
+                callback: function(key, opt) {
+                    var path = $(this).text().trim();
+                    var $this = this;
+                    $.contextMenu.getInputValues(opt, $this.data());
+                    window.location.href="/screen/delscreen?key="+path;
+                }
+            }
+        },
+        events: {
+            show: function(opt) {
+                var $this = this;
+                $.contextMenu.setInputValues(opt, $this.data());
+            },
+            hide: function(opt) {
+                var $this = this;
+                $.contextMenu.getInputValues(opt, $this.data());
+            }
+        }
+
+    });
+
+    $('#tab2').contextMenu({
+        selector: 'a',
+        trigger: 'right',
+        delay:800,
+        autoHide:true,
+
+        items:{
+            "name": {
+                name: "别名",
+                type: 'text',
+                value: "输入别名"
+            },
+            "sep1": "---------",
+            "copy": {
+                name: "添加到常用",
+                icon: "copy",
+                callback: function(key, opt) {
+                    var $this = this;
+                    var href = $(this).attr("href");
+                    var end = href.indexOf('?');
+                    var start = href.lastIndexOf('/');
+                    var href_id = href.substring(start+1,end);
+
+                    var path = $(this).text().trim();
+                    $.contextMenu.getInputValues(opt, $this.data());
+                    var othername = $this.data().name;
+                    if (othername != ''){
+                        path = othername
+                    }
+                    path = path.replace(/&/g," ");
+                    window.location.href="/screen/addscreen?path="+path+"&screen_id="+href_id;
+                }
+            }
+        },
+        events: {
+            show: function(opt) {
+                var $this = this;
+                $.contextMenu.setInputValues(opt, $this.data());
+            },
+            hide: function(opt) {
+                var $this = this;
+                $.contextMenu.getInputValues(opt, $this.data());
+            }
+        }
+    });
+
+});
+
+
+</script>
+
+<div class="tabbable">
+  <ul class="nav nav-tabs" id="pathtab">
+    <li class="active"><a href="#tab1" data-toggle="tab">常用</a></li>
+    <li><a href="#tab2" data-toggle="tab">全部</a></li>
+  </ul>
+  <div class="tab-content" id="namespace" style="height: 950px;overflow-y: scroll;">
+    <div class="tab-pane active" id="tab1">
+        <ul class="nav nav-tabs" id="namespace_usual" data-toggle="context" data-target="#context-menu">
+            <li style="float:none;">
+                <div class="form-group search-area">
+                    <input  class="form-control" id="searchinput4" type="search" placeholder="搜索..">
+                </div>
+            </li>
+            {% if not usual_list%}
+            <li>暂无常用,可通过右键从全部标签中添加</li>
+            {%else%}
+                {% for p in usual_list %}
+                    <li  style="float:none;word-break: break-all;margin-bottom: -10px;">
+                        <a href="/screen/{{p[1]}}"><small>{{p[0]}}</small></a>
+                    </li>
+                {%endfor%}
+            {% endif %}
+        </ul>
+    </div>
+
+    <div class="tab-pane" id="tab2">
+        <ul class="nav nav-tabs" id="namespace_all" data-toggle="context" data-target="#context-menu">
+            <li style="float:none;line-height: 0.9">
+                <div class="form-group search-area">
+                    <input  class="form-control" id="searchinput3" type="search" placeholder="搜索..">
+                </div>
+            </li>
+        {% if not all_list%}
+            <li>暂无screen,可通过顶部导航新建screen</li>
+            {%else%}
+                {% for p in all_list %}
+                    <li style="float:none;word-break: break-all;margin-bottom: -10px;">
+                    <a href="/screen/{{p[1]}}?show=all"><small>{{p[0]}}</small></a>
+
+                    </li>
+                {%endfor%}
+            {% endif %}
+            </ul>
+    </div>
+  </div>
+</div>
+
+
+{%- endmacro %}
+
+
+
+
+
