@@ -183,6 +183,7 @@ def multi_endpoints_chart_data():
 
     return json.dumps(ret)
 
+
 @app.route("/chart/k", methods=["GET"])
 def multi_counters_chart_data():
     if not g.id:

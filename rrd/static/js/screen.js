@@ -127,6 +127,7 @@ $(function() {
             var $el = $(area).find('.chart-area');
             var $t = $(area).find('.chart-title');
             var $l = $(area).find('.legend');
+            var $total = $(area).find('.total');
 
             var href = $.query.load(window.location.href);
             var showLegend = href.get('legend');
@@ -136,6 +137,7 @@ $(function() {
             //}
             $.plot($el, data, getConfig({legend: $l}));
             $t.html(title);
+            $total.html("total:"+ret.series.length);
 
             $el.on('plothover', function (event, pos, item) {
                 // console.log('1111');
@@ -169,6 +171,8 @@ $(function() {
             var $el = $(c).find('.chart-area');
             var $t = $(c).find('.chart-title');
             var $l = $(c).find('.legend');
+            var $total = $(c).find('.total');
+
             $.getJSON(url, function(ret) {
                 var data = parseData(ret);
                 var title = ret.title;
@@ -183,6 +187,7 @@ $(function() {
                 cachePlot[i].$el = $el;
                 cachePlot[i].$l = $l;
                 $t.html(title);
+                $total.html("total:"+ret.series.length);
 
                 $el.on('plothover', function (event, pos, item) {
                     // console.log('1111');

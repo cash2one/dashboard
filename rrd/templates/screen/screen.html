@@ -15,7 +15,9 @@
                 <li> {{screen_layout.screen_sub_menu(pscreen, screen, sub_screens)}} </li>
 
                 {%if screen%}
+                    {% if g.user_name != 'public' %}
                     <li id="add_to_usual"><a href="/screen/addscreen?path={{screen.name}}&screen_id={{screen.id}}"><i class="icon-edit"></i>添加到常用</a></li>
+                     {% endif %}
                     <li><a href="/screen/{{screen.id}}/edit"><i class="icon-edit"></i>编辑</a></li>
                     <li><a href="javascript:;" class="icon-muledit"><i></i>批量编辑</a></li>
                     <li><a href="/screen/{{screen.id}}/delete" onclick="return confirm('确定要删除这个screen?');"><i class="icon-trash"></i>删除</a></li>
@@ -26,6 +28,7 @@
                     {%else%}
                     <li><a href="#" onclick="fn_query({legend: 'on'})"><i class="icon-plus"></i>显示legend</a></li>
                     {%endif%}
+
 
                     <li>
                         <div class="btn-group">

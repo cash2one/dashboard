@@ -64,6 +64,7 @@ def generate_graph_urls(graph, start, end):
 
     return _generate_graph_urls(graph, counters, endpoint_list, start, end)
 
+
 def _generate_graph_urls(graph, counters, endpoint_list, start, end):
     ret_graphs = []
 

@@ -16,8 +16,6 @@ def all_exception_handler(error):
 
 @app.before_request
 def before_request():
-    p = request.path
-
     if 'user_name' in session and session['user_name']:
         g.user_name = session['user_name']
     else:

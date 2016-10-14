@@ -45,8 +45,6 @@ $(function(){
 
 
 </script>
-
-
         {%set i=0%}
         <div class="row">
         {%for graph in graphs%}
@@ -99,6 +97,7 @@ $(function(){
                                 </div>
 
                                 <div class="chart-{{i}} chart-area panel-body" style="margin:10px;padding:10px;"></div>
+                                <span class="total" style="margin-left: 19px;color: #ACABAB;font-size: 14px;"></span>
                                 <div class="legend panel-body graph-legend"></div>
                         </div>
                     {%set i=i+1%}
@@ -313,19 +312,27 @@ $(document).ready(function(){
                     <input  class="form-control" id="searchinput4" type="search" placeholder="搜索..">
                 </div>
             </li>
-            {% if not usual_list%}
-            <li>暂无常用,可通过右键从全部标签中添加</li>
+             {% if g.user_name == 'public' %}
+            <div>若希望使用常用功能,可点击链接
+                <a href="http://10.103.16.30:8080/auth/register">注册账号</a>,登陆后方可使用
+            </div>
             {%else%}
-                {% for p in usual_list %}
-                    <li  style="float:none;word-break: break-all;margin-bottom: -10px;">
-                        <a href="/screen/{{p[1]}}"><small>{{p[0]}}</small></a>
-                    </li>
-                {%endfor%}
+                {% if not usual_list%}
+                <li>暂无常用,可通过右键从全部标签中添加</li>
+                {%else%}
+                    {% for p in usual_list %}
+                        <li  style="float:none;word-break: break-all;margin-bottom: -10px;">
+                            <a href="/screen/{{p[1]}}"><small>{{p[0]}}</small></a>
+                        </li>
+                    {%endfor%}
+                {% endif %}
             {% endif %}
         </ul>
     </div>
 
+
     <div class="tab-pane" id="tab2">
+         {% if g.user_name != 'public' %}
         <ul class="nav nav-tabs" id="namespace_all" data-toggle="context" data-target="#context-menu">
             <li style="float:none;line-height: 0.9">
                 <div class="form-group search-area">
@@ -343,7 +350,9 @@ $(document).ready(function(){
                 {%endfor%}
             {% endif %}
             </ul>
+        {% endif %}
     </div>
+
   </div>
 </div>
 

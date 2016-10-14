@@ -1,4 +1,4 @@
-# -*- coding:utf-8 -*-
+q# -*- coding:utf-8 -*-
 __author__ = 'Ulric Qin'
 import requests
 import logging
@@ -25,6 +25,8 @@ def username_from_sso(sig=''):
 
 
 def login_url(sig='', callback=''):
+    if callback == '/me/logout':
+        callback = ''
     return '%s/auth/login?sig=%s&callback=%s' % (UIC_ADDRESS['external'], sig, callback)
 
 
