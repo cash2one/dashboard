@@ -1,4 +1,4 @@
-q# -*- coding:utf-8 -*-
+# -*- coding:utf-8 -*-
 __author__ = 'Ulric Qin'
 import requests
 import logging

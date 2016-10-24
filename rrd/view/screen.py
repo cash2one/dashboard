@@ -1,6 +1,6 @@
 #-*- coding:utf-8 -*-
 import json
-from flask import render_template, abort, request, redirect, g, make_response, session
+from flask import render_template, abort, request, redirect, g, make_response, session, jsonify
 
 from rrd import app
 from rrd.model.screen import DashboardScreen
@@ -344,3 +344,17 @@ def logout():
     resp = make_response(redirect(url))
     session.clear()
     return resp
+
+
+@app.route("/api/group_screen", methods=["GET", "POST"])
+def group_screen():
+    group_name = ""
+    if request.method == "GET":
+        group_name = request.args.get("group_name")
+    elif request.method == "POST":
+        group_name = request.form.get("group_name", "")
+
+    screen_id = namespace.get_screen_by_name(group_name)
+
+    group_url = "http://10.103.16.30:8081/screen/%s" % screen_id
+    return jsonify(group_url=group_url)

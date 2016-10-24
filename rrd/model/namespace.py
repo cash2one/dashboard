@@ -58,5 +58,15 @@ def update_screen(user, oldname, newname):
         flash(u"名字已经存在,请重新输入一个名字!")
 
 
+def get_screen_by_name(name):
+    sql = "select id from dashboard_screen where name='%s'" % name
+    cursor = db_conn.execute(sql)
+    row = cursor.fetchone()
+    cursor and cursor.close()
+    if row:
+        return row[0]
+    return None
+
+
 if __name__ == "__main__":
-    pass
+    print get_screen_by_name("yidian/prod/serving/blender")

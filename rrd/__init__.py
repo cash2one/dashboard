@@ -7,6 +7,8 @@ import urllib
 app = Flask(__name__)
 app.config.from_object("rrd.config")
 
+IGNORE_PREFIX = ['/api', '/screen/logout']
+
 
 @app.errorhandler(Exception)
 def all_exception_handler(error):
@@ -16,25 +18,24 @@ def all_exception_handler(error):
 
 @app.before_request
 def before_request():
+    p = request.path
+    for ignore_pre in IGNORE_PREFIX:
+        if p.startswith(ignore_pre):
+            return
+
     if 'user_name' in session and session['user_name']:
         g.user_name = session['user_name']
     else:
         sig = request.cookies.get('sig')
         if not sig:
-            return redirect_to_sso()
-
-        username = uic.username_from_sso(sig)
+            username = ""
+        else:
+            username = uic.username_from_sso(sig)
         if not username:
-            return redirect_to_sso()
+            username = ""
 
         session['user_name'] = username
         g.user_name = session['user_name']
 
-
-def redirect_to_sso():
-    sig = uic.gen_sig()
-    resp = make_response(redirect(uic.login_url(sig, urllib.quote(request.url))))
-    resp.set_cookie('sig', sig)
-    return resp
 
 from view import api, chart, screen, index

@@ -312,7 +312,7 @@ $(document).ready(function(){
                     <input  class="form-control" id="searchinput4" type="search" placeholder="搜索..">
                 </div>
             </li>
-             {% if g.user_name == 'public' %}
+             {% if g.user_name == 'public' or g.user_name == '' %}
             <div>若希望使用常用功能,可点击链接
                 <a href="http://10.103.16.30:8080/auth/register">注册账号</a>,登陆后方可使用
             </div>
@@ -332,7 +332,7 @@ $(document).ready(function(){
 
 
     <div class="tab-pane" id="tab2">
-         {% if g.user_name != 'public' %}
+         {% if g.user_name != 'public' and g.user_name != "" %}
         <ul class="nav nav-tabs" id="namespace_all" data-toggle="context" data-target="#context-menu">
             <li style="float:none;line-height: 0.9">
                 <div class="form-group search-area">
