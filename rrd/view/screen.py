@@ -354,7 +354,12 @@ def group_screen():
     elif request.method == "POST":
         group_name = request.form.get("group_name", "")
 
+    group_name = "/".join(group_name.split("||"))
     screen_id = namespace.get_screen_by_name(group_name)
 
     group_url = "http://10.103.16.30:8081/screen/%s" % screen_id
-    return jsonify(group_url=group_url)
+
+    # allow cross-site http request for our cmdb ajax request
+    response = make_response(jsonify(group_url=group_url))
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return response
