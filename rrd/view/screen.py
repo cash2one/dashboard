@@ -349,13 +349,16 @@ def logout():
 @app.route("/api/group_screen", methods=["GET", "POST"])
 def group_screen():
     group_name = ""
+    screen_name = ""
     if request.method == "GET":
         group_name = request.args.get("group_name")
+        screen_name = request.args.get("screen_name")
     elif request.method == "POST":
         group_name = request.form.get("group_name", "")
+        screen_name = request.form.get("screen_name", "")
 
     group_name = "/".join(group_name.split("||"))
-    screen_id = namespace.get_screen_by_name(group_name)
+    screen_id = namespace.get_screen_by_name(group_name, screen_name)
 
     group_url = "http://10.103.16.30:8081/screen/%s" % screen_id
 

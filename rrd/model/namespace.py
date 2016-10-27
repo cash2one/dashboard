@@ -58,15 +58,21 @@ def update_screen(user, oldname, newname):
         flash(u"名字已经存在,请重新输入一个名字!")
 
 
-def get_screen_by_name(name):
-    sql = "select id from dashboard_screen where name='%s'" % name
+def get_screen_by_name(group_name, screen_name):
+    sql = "select id from dashboard_screen where name='%s'" % group_name
     cursor = db_conn.execute(sql)
-    row = cursor.fetchone()
+    group_id = cursor.fetchone()
     cursor and cursor.close()
-    if row:
-        return row[0]
+    if group_id is None:
+        return None
+
+    cursor = db_conn.execute('''select id from dashboard_screen where name=%s and pid=%s''', (screen_name, group_id))
+    screen_id = cursor.fetchone()
+    cursor and cursor.close()
+    if screen_id is not None:
+        return screen_id[0]
     return None
 
 
 if __name__ == "__main__":
-    print get_screen_by_name("yidian/prod/serving/blender")
+    print get_screen_by_name("oc_haproxy", "a1.go2yd.com")
