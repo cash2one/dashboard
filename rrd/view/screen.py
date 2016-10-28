@@ -357,7 +357,7 @@ def group_screen():
         group_name = request.form.get("group_name", "")
         screen_name = request.form.get("screen_name", "")
 
-    group_name = "/".join(group_name.split("||"))
+    screen_name = "/".join(screen_name.split("||"))
     screen_id = namespace.get_screen_by_name(group_name, screen_name)
 
     group_url = "http://10.103.16.30:8081/screen/%s" % screen_id

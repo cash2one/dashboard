@@ -13,7 +13,7 @@ IGNORE_PREFIX = ['/api', '/screen/logout']
 @app.errorhandler(Exception)
 def all_exception_handler(error):
     print "exception: %s" %error
-    return u'''dashboard暂时无法访问管理员''', 500
+    return u'''dashboard暂时无法访问''', 500
 
 
 @app.before_request
