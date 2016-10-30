@@ -314,7 +314,8 @@ $(document).ready(function(){
             </li>
              {% if g.user_name == 'public' or g.user_name == '' %}
             <div>若希望使用常用功能,可点击链接
-                <a href="http://10.103.16.30:8080/auth/register">注册账号</a>,登陆后方可使用
+                <a href="http://10.103.16.30:8080/auth/register">注册</a>或
+                <a href="http://10.103.16.30:8080/auth/login">登陆</a>,登陆后方可使用
             </div>
             {%else%}
                 {% if not usual_list%}

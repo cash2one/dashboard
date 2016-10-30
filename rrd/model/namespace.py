@@ -65,8 +65,7 @@ def get_screen_by_name(group_name, screen_name):
     cursor and cursor.close()
     if group_id is None:
         return None
-
-    cursor = db_conn.execute('''select id from dashboard_screen where name=%s and pid=%s''', (screen_name, group_id))
+    cursor = db_conn.execute('''select id from dashboard_screen where name=%s and pid=%s''', (screen_name, group_id[0]))
     screen_id = cursor.fetchone()
     cursor and cursor.close()
     if screen_id is not None:

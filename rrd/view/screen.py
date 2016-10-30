@@ -358,6 +358,8 @@ def group_screen():
         screen_name = request.form.get("screen_name", "")
 
     screen_name = "/".join(screen_name.split("||"))
+    if group_name == "oc_nginx_nginx":
+        screen_name += "_nginx"
     screen_id = namespace.get_screen_by_name(group_name, screen_name)
 
     group_url = "http://10.103.16.30:8081/screen/%s" % screen_id

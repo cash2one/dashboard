@@ -31,8 +31,8 @@ def before_request():
             username = ""
         else:
             username = uic.username_from_sso(sig)
-        if not username:
-            username = ""
+            if not username:
+                username = ""
 
         session['user_name'] = username
         g.user_name = session['user_name']
