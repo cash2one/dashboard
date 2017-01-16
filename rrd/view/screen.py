@@ -363,7 +363,7 @@ def group_screen():
         screen_name += "_nginx"
     screen_id = namespace.get_screen_by_name(group_name, tmp_screen_name)
 
-    group_url = "http://10.103.16.30:8081/screen/%s" % screen_id
+    group_url = "http://falcon-dash.yidian-inc.com/screen/%s" % screen_id
 
     # allow cross-site http request for our cmdb ajax request
     response = make_response(jsonify(group_url=group_url))
