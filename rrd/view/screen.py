@@ -360,7 +360,7 @@ def group_screen():
     tmp_screen_name = screen_name[:-2] if screen_name.endswith("||") else screen_name
     tmp_screen_name = "/".join(tmp_screen_name.split("||"))
     if group_name == "oc_nginx_nginx":
-        screen_name += "_nginx"
+        tmp_screen_name += "_nginx"
     screen_id = namespace.get_screen_by_name(group_name, tmp_screen_name)
 
     group_url = "http://falcon-dash.yidian-inc.com/screen/%s" % screen_id
